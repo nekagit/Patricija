@@ -50,6 +50,9 @@ def config_tab():
     
     cfg = render_sidebar("config")
     
+    # Store configuration in session state for consistency across tabs
+    st.session_state.training_config = cfg
+    
     # Display configuration summary
     col1, col2 = st.columns(2)
     
@@ -67,6 +70,16 @@ def config_tab():
         st.write(f"**Skalierung:** {cfg['scaler']}")
         if cfg["training_mode"] == "Bestehendes Modell weiter trainieren":
             st.write(f"**Lernrate:** {cfg['incremental_lr']}")
+        else:
+            # Show model-specific parameters
+            if cfg['estimator'] == "Random Forest" and cfg.get('rf_params'):
+                st.write(f"**Bäume:** {cfg['rf_params'].get('n_estimators', 'N/A')}")
+                st.write(f"**Max. Tiefe:** {cfg['rf_params'].get('max_depth', 'N/A')}")
+            elif cfg['estimator'] == "Gradient Boosting" and cfg.get('model_params'):
+                st.write(f"**Bäume:** {cfg['model_params'].get('n_estimators', 'N/A')}")
+                st.write(f"**Lernrate:** {cfg['model_params'].get('learning_rate', 'N/A')}")
+            elif cfg['estimator'] == "Logistic Regression" and cfg.get('model_params'):
+                st.write(f"**C (Regularisierung):** {cfg['model_params'].get('C', 'N/A')}")
     
     return cfg
 
@@ -143,8 +156,12 @@ def training_tab():
     """Training execution tab."""
     st.markdown("### 🚀 Training starten")
     
-    # Get configuration
-    cfg = render_sidebar("training")
+    # Get configuration from session state or sidebar
+    if hasattr(st.session_state, 'training_config'):
+        cfg = st.session_state.training_config
+    else:
+        cfg = render_sidebar("training")
+        st.session_state.training_config = cfg
     
     # Check if data is available
     df, is_german_flag = upload_and_preview(cfg["auto_detect"], cfg["german_credit_flag"], "training_tab")
@@ -159,19 +176,32 @@ def training_tab():
     
     button_text = "🚀 Automatisches Training starten"
     
-    # Display current settings
+    # Display current settings from sidebar configuration
     st.markdown("#### ⚙️ Aktuelle Einstellungen")
     col1, col2 = st.columns(2)
     
     with col1:
-        st.write(f"**Modell:** {cfg["estimator"]}")
-        st.write(f"**Zielvariable:** {cfg["target_col"]}")
-        st.write(f"**Test-Größe:** {cfg["test_size"]:.1%}")
+        st.write(f"**Modell:** {cfg['estimator']}")
+        st.write(f"**Zielvariable:** {cfg['target_col']}")
+        st.write(f"**Test-Größe:** {cfg['test_size']:.1%}")
+        st.write(f"**Zufalls-Seed:** {cfg['seed']}")
     
     with col2:
-        st.write(f"**Skalierer:** {cfg["scaler"]}")
+        st.write(f"**Skalierer:** {cfg['scaler']}")
         st.write(f"**Datensatz-Größe:** {len(df):,} Zeilen")
         st.write(f"**Spalten:** {len(df.columns)}")
+        if cfg['training_mode'] == "Bestehendes Modell weiter trainieren":
+            st.write(f"**Lernrate:** {cfg['incremental_lr']}")
+        else:
+            # Show model-specific parameters
+            if cfg['estimator'] == "Random Forest" and cfg.get('rf_params'):
+                st.write(f"**Bäume:** {cfg['rf_params'].get('n_estimators', 'N/A')}")
+                st.write(f"**Max. Tiefe:** {cfg['rf_params'].get('max_depth', 'N/A')}")
+            elif cfg['estimator'] == "Gradient Boosting" and cfg.get('model_params'):
+                st.write(f"**Bäume:** {cfg['model_params'].get('n_estimators', 'N/A')}")
+                st.write(f"**Lernrate:** {cfg['model_params'].get('learning_rate', 'N/A')}")
+            elif cfg['estimator'] == "Logistic Regression" and cfg.get('model_params'):
+                st.write(f"**C (Regularisierung):** {cfg['model_params'].get('C', 'N/A')}")
     
     st.markdown("---")
     st.markdown("#### 🎯 Training starten")
@@ -196,13 +226,22 @@ def training_tab():
             incremental_lr=cfg["incremental_lr"]
         )
     else:
+        # Use the correct estimator and parameters from sidebar
+        estimator_name = cfg["estimator"]
+        est_params = None
+        
+        if estimator_name == "Random Forest" and cfg.get("rf_params"):
+            est_params = cfg["rf_params"]
+        elif estimator_name in ["Logistic Regression", "Gradient Boosting"] and cfg.get("model_params"):
+            est_params = cfg["model_params"]
+        
         config = TrainConfig(
             target=cfg["target_col"],
             test_size=cfg["test_size"],
             scaler=cfg["scaler"],
             is_german_credit=is_german_flag,
-            estimator=cfg["estimator"],
-            est_params=cfg.get("rf_params") or cfg.get("model_params"),
+            estimator=estimator_name,
+            est_params=est_params,
             training_mode="new"
         )
 

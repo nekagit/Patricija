@@ -2,7 +2,7 @@ import os, json, warnings, joblib
 import numpy as np
 import pandas as pd
 import shap
-import lime.lime_tabular as ltt
+# LIME import removed as requested
 
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -20,7 +20,7 @@ def _load_paths(model_name: str):
         "ENCODERS_PATH":os.path.join(models_dir, "label_encoders.pkl"),
         "SCALER_PATH":  os.path.join(models_dir, "standard_scaler.pkl"),
         "COLUMNS_PATH": os.path.join(models_dir, "feature_names.json"),
-        "BACKGROUND":   os.path.join(models_dir, "lime_background.npy"),
+        "BACKGROUND":   None,  # LIME background removed as requested
         "DATA_PATH":    os.path.join(base_path, "data", "german.data"),
     }
 
@@ -50,44 +50,8 @@ def _align_input_row(applicant_data: dict, feature_columns: list, label_encoders
     return pd.DataFrame([row], columns=feature_columns)
 
 def _prepare_lime_background(paths, feature_columns, label_encoders, scaler):
-    try:
-        if os.path.exists(paths["BACKGROUND"]):
-            X_bg = np.load(paths["BACKGROUND"])
-            if X_bg.ndim == 2 and X_bg.shape[1] == len(feature_columns):
-                if X_bg.shape[0] > SAFE_LIME_MAX_BG:
-                    idx = np.random.RandomState(42).choice(X_bg.shape[0], SAFE_LIME_MAX_BG, replace=False)
-                    X_bg = X_bg[idx]
-                return X_bg.astype(np.float64, copy=False)
-    except Exception:
-        pass
-
-    try:
-        if not os.path.exists(paths["DATA_PATH"]):
-            return None
-        raw = pd.read_csv(paths["DATA_PATH"], sep=r"\s+", header=None, dtype=str)
-        n_feat = len(feature_columns)
-        if raw.shape[1] < n_feat:
-            return None
-        X_raw = raw.iloc[:, :n_feat].copy()
-
-        X_enc = pd.DataFrame(index=X_raw.index, columns=feature_columns)
-        for i, col in enumerate(feature_columns):
-            s = X_raw.iloc[:, i]
-            if col in label_encoders:
-                enc = label_encoders[col]
-                s = s.where(s.isin(enc.classes_), enc.classes_[0])
-                X_enc[col] = enc.transform(s.astype(str))
-            else:
-                X_enc[col] = pd.to_numeric(s, errors="coerce").fillna(0)
-
-        X_enc = X_enc.astype(float)
-        X_bg = scaler.transform(X_enc)
-        if X_bg.shape[0] > SAFE_LIME_MAX_BG:
-            idx = np.random.RandomState(42).choice(X_bg.shape[0], SAFE_LIME_MAX_BG, replace=False)
-            X_bg = X_bg[idx]
-        return X_bg.astype(np.float64, copy=False)
-    except Exception:
-        return None
+    # LIME background functionality removed as requested
+    return None
 
 def _class_indices_for_good_bad(model):
     classes = getattr(model, "classes_", None)
@@ -153,27 +117,7 @@ def run_inference(applicant_data: dict, model_name: str = "random_forest"):
     except Exception:
         result["shap_explanation_object"] = None
     
-    try:
-        X_bg = _prepare_lime_background(paths, feature_columns, label_encoders, scaler)
-        if X_bg is not None:
-            explainer = ltt.LimeTabularExplainer(
-                training_data=X_bg,
-                feature_names=feature_columns,
-                class_names=classes,
-                mode="classification",
-                discretize_continuous=False,
-                random_state=42,
-            )
-            predict_fn = _get_predict_proba_fn(model, feature_columns)
-            explanation = explainer.explain_instance(
-                data_row=X_scaled[0],
-                predict_fn=predict_fn,
-                num_features=min(12, len(feature_columns)),
-            )
-            result["lime_explanation"] = explanation
-        else:
-            result["lime_explanation"] = None
-    except Exception:
-        result["lime_explanation"] = None
+    # LIME explanation generation removed as requested
+    result["lime_explanation"] = None
     
     return result

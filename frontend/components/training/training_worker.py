@@ -36,7 +36,7 @@ def _worker_train_and_save(
                 available_cols = list(df_cleaned.columns)
                 raise ValueError(f"Target column '{config.target}' not found in DataFrame. Available columns: {available_cols}")
 
-        model, model_name, features, scaler, encoders, _, _, metrics, lime_bg = train_and_select(
+        model, model_name, features, scaler, encoders, _, _, metrics, _ = train_and_select(
             df=df_cleaned,
             config=config,
             progress_cb=progress_callback
@@ -52,7 +52,7 @@ def _worker_train_and_save(
             scaler=scaler,
             encoders=encoders,
             features=list(features),
-            lime_background=lime_bg
+            lime_background=None  # LIME background removed as requested
         )
 
         final_result = {

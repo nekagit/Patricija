@@ -81,6 +81,14 @@ OPTIONS = {
         "A173": "Facharbeiter/Angestellter",
         "A174": "Management/Selbstständig/Akademiker",
     },
+    "telephone": {
+        "A191": "Nein",
+        "A192": "Ja",
+    },
+    "foreign_worker": {
+        "A201": "Ja",
+        "A202": "Nein",
+    },
 }
 
 DEFAULTS = {

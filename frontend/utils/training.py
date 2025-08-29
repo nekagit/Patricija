@@ -242,7 +242,7 @@ def train_and_select(
     print(f"Model performance: Accuracy={accuracy:.3f}, ROC AUC={roc_auc:.3f}")
     
     p(1.0, "Training complete!")
-    return model, model_name, X_encoded.columns, scaler, encoders, X_test_scaled, y_test, metrics, X_train_scaled
+    return model, model_name, X_encoded.columns, scaler, encoders, X_test_scaled, y_test, metrics, None  # LIME background removed
 
 
 def save_artifacts(
@@ -264,5 +264,4 @@ def save_artifacts(
     with open(os.path.join(out_dir, "feature_names.json"), "w", encoding="utf-8") as f:
         json.dump(list(map(str, features)), f, indent=2)
         
-    if lime_background is not None:
-        np.save(os.path.join(out_dir, "lime_background.npy"), lime_background.astype(np.float32))
+    # LIME background saving removed as requested

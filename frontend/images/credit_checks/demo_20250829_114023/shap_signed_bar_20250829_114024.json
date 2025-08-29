@@ -1,0 +1,9 @@
+{
+  "plot_type": "matplotlib",
+  "feature_count": 6,
+  "title": "Negative SHAP Values",
+  "positive_count": 0,
+  "negative_count": 6,
+  "filename": "shap_signed_bar_20250829_114024.png",
+  "saved_at": "2025-08-29T11:40:24.580673"
+}

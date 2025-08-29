@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import joblib
 import shap
-import lime.lime_tabular as ltab
+# LIME import removed as requested
 
 from utils.logger import get_logger, log_performance, log_errors
 from utils.cache import cache_prediction, get_model_cache, hash_input_data
@@ -83,15 +83,8 @@ class ModelLoader:
         except Exception as e:
             raise PredictionError(f"Failed to load feature names: {e}")
         
-        bg_path = self.models_dir / "lime_background.npy"
-        if bg_path.exists():
-            try:
-                artifacts["lime_bg"] = np.load(bg_path)
-            except Exception:
-                artifacts["lime_bg"] = None
-                logger.warning("Failed to load LIME background data")
-        else:
-            artifacts["lime_bg"] = None
+        # LIME background data removed as requested
+        artifacts["lime_bg"] = None
         
         return artifacts
     
@@ -101,7 +94,10 @@ class ModelLoader:
             model_path = self.models_dir / f"{slug}_model.pkl"
             if model_path.exists():
                 return model_path, model_name
+            else:
+                logger.warning(f"Model file not found: {model_path}")
         
+        # Fallback: find any available model
         for model_file in sorted(self.models_dir.glob("*_model.pkl")):
             pretty_name = model_file.stem.replace("_model", "").replace("_", " ").title()
             return model_file, pretty_name
@@ -229,16 +225,8 @@ class PredictionEngine:
             logger.warning(f"SHAP explanation failed: {e}")
             explanations["shap_explanation_object"] = None
         
-        try:
-            lime_explanation, lime_err = self._build_lime_explanation(
-                model, feature_names, input_scaled_df.values[0], lime_bg
-            )
-            explanations["lime_explanation"] = lime_explanation
-            if lime_err:
-                explanations["_diag"] = {"lime_error": lime_err}
-        except Exception as e:
-            logger.warning(f"LIME explanation failed: {e}")
-            explanations["lime_explanation"] = None
+        # LIME explanation generation removed as requested
+        explanations["lime_explanation"] = None
         
         return explanations
     
@@ -297,29 +285,8 @@ class PredictionEngine:
         self, model: Any, feature_names: List[str], 
         input_scaled_row: np.ndarray, lime_bg: Optional[np.ndarray]
     ) -> Tuple[Optional[Any], Optional[str]]:
-        if lime_bg is None or lime_bg.shape[1] != len(feature_names):
-            return None, "LIME background data is missing or has incorrect dimensions"
-        
-        explainer = ltab.LimeTabularExplainer(
-            training_data=lime_bg,
-            feature_names=feature_names,
-            class_names=self._get_class_names(model),
-            mode="classification",
-            discretize_continuous=False,
-            random_state=42,
-        )
-        
-        predict_fn = self._get_predict_proba_fn(model, feature_names)
-        
-        try:
-            explanation = explainer.explain_instance(
-                data_row=input_scaled_row,
-                predict_fn=predict_fn,
-                num_features=min(12, len(feature_names)),
-            )
-            return explanation, None
-        except Exception as e:
-            return None, f"LIME error: {e}"
+        # LIME explanation functionality removed as requested
+        return None, "LIME explanations are not available"
 
 prediction_engine = PredictionEngine()
 

@@ -31,23 +31,24 @@ def results_page():
         st.error("❌ Kredit abgelehnt (Hohes Risiko)", icon="🔥")
         prob_bad = result.get('probability_bad', 0)
         st.progress(prob_bad, text=f"Konfidenz der KI: {prob_bad:.1%}")
+    
     st.markdown("---")
-
-    tab_details, tab_shap, tab_lime, tab_history = st.tabs([
-        "📊 Ergebnis & Was-wäre-wenn",
-        "🎯 Erklärung (SHAP)",
-        "🔬 Alternative Erklärung (LIME)",
-        "📜 Verlauf & Modelldetails"
-    ])
-
-    with tab_details:
-        render_details_whatif_tab(result, applicant_data_readable)
-
-    with tab_shap:
-        render_shap_tab(result)
-
-    with tab_lime:
-        render_lime_tab(result)
-
-    with tab_history:
-        render_history_model_tab(result)
+    
+    # Alle Inhalte direkt anzeigen ohne Tabs
+    st.subheader("📊 Ergebnis & Was-wäre-wenn")
+    render_details_whatif_tab(result, applicant_data_readable)
+    
+    st.markdown("---")
+    
+    st.subheader("🎯 Erklärung (SHAP)")
+    render_shap_tab(result)
+    
+    st.markdown("---")
+    
+    st.subheader("🔬 Alternative Erklärung (LIME)")
+    render_lime_tab(result)
+    
+    st.markdown("---")
+    
+    st.subheader("📜 Verlauf & Modelldetails")
+    render_history_model_tab(result)
