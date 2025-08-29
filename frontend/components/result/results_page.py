@@ -18,7 +18,6 @@ def results_page():
         return
     applicant_data_readable = st.session_state.get('applicant_data_readable', {})
 
-    st.title("Ergebnis Ihrer Kreditanalyse")
     prediction_text = result.get('prediction', 'Unbekannt')
     
     if prediction_text == "Good":
