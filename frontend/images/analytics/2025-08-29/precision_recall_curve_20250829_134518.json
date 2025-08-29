@@ -1,0 +1,15 @@
+{
+  "plot_type": "matplotlib",
+  "y_true_shape": [
+    6517
+  ],
+  "pr_auc": 0.6838259403555139,
+  "precision_shape": [
+    6508
+  ],
+  "recall_shape": [
+    6508
+  ],
+  "filename": "precision_recall_curve_20250829_134518.png",
+  "saved_at": "2025-08-29T13:45:19.123886"
+}

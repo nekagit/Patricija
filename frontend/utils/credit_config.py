@@ -1,106 +1,52 @@
 from __future__ import annotations
 
 FIELD_KEYS = [
-    "checking_account_status", "duration_months", "credit_history", "purpose",
-    "credit_amount", "savings_account", "employment_since",
-    "installment_rate_percent", "personal_status_sex", "other_debtors_guarantors",
-    "residence_since", "property", "age_years", "other_installment_plans",
-    "housing", "num_existing_credits", "job", "num_dependents",
-    "telephone", "foreign_worker",
+    "person_age", "person_income", "person_home_ownership", "person_emp_length",
+    "cb_person_cred_hist_length", "cb_person_default_on_file", "loan_intent",
+    "loan_grade", "loan_amnt", "loan_int_rate", "loan_percent_income"
 ]
 
 OPTIONS = {
-    "checking_account_status": {
-        "A11": "Kein Girokonto",
-        "A12": "Guthaben < 0 DM",
-        "A13": "0 ≤ Guthaben < 200 DM",
-        "A14": "Guthaben ≥ 200 DM",
+    "person_home_ownership": {
+        "RENT": "Miete",
+        "OWN": "Eigentum",
+        "MORTGAGE": "Hypothek",
+        "OTHER": "Sonstiges"
     },
-    "credit_history": {
-        "A30": "Keine Kredite / Alle zurückgezahlt",
-        "A31": "Alle Kredite bei dieser Bank zurückgezahlt",
-        "A32": "Bestehende Kredite pünktlich bezahlt",
-        "A33": "Zahlungsschwierigkeiten in der Vergangenheit",
-        "A34": "Kritisches Konto / Andere Kredite vorhanden",
+    "cb_person_default_on_file": {
+        "Y": "Ja",
+        "N": "Nein"
     },
-    "purpose": {
-        "A40": "Neuwagen",
-        "A41": "Gebrauchtwagen",
-        "A42": "Möbel/Ausstattung",
-        "A43": "Radio/Fernseher",
-        "A44": "Haushaltsgeräte",
-        "A45": "Reparaturen",
-        "A46": "Ausbildung",
-        "A49": "Geschäftlich",
-        "A410": "Sonstiges",
+    "loan_intent": {
+        "PERSONAL": "Persönlich",
+        "EDUCATION": "Ausbildung",
+        "MEDICAL": "Medizinisch",
+        "VENTURE": "Unternehmen",
+        "HOMEIMPROVEMENT": "Hausverbesserung",
+        "DEBTCONSOLIDATION": "Schuldenkonsolidierung"
     },
-    "savings_account": {
-        "A61": "< 100 DM",
-        "A62": "100 – 500 DM",
-        "A63": "500 – 1000 DM",
-        "A64": "≥ 1000 DM",
-        "A65": "Kein Sparkonto",
-    },
-    "employment_since": {
-        "A71": "Arbeitslos",
-        "A72": "< 1 Jahr",
-        "A73": "1 – 4 Jahre",
-        "A74": "4 – 7 Jahre",
-        "A75": "≥ 7 Jahre",
-    },
-    "personal_status_sex": {
-        "A91": "Männlich, geschieden/getrennt",
-        "A92": "Weiblich, geschieden/getrennt/verheiratet",
-        "A93": "Männlich, ledig",
-        "A94": "Männlich, verheiratet/verwitwet",
-    },
-    "other_debtors_guarantors": {
-        "A101": "Keine",
-        "A102": "Mitantragsteller",
-        "A103": "Bürge",
-    },
-    "property": {
-        "A121": "Immobilien",
-        "A122": "Bausparvertrag/Lebensversicherung",
-        "A123": "Auto/Sonstiges",
-        "A124": "Kein Eigentum",
-    },
-    "other_installment_plans": {
-        "A141": "Bank",
-        "A142": "Geschäfte",
-        "A143": "Keine",
-    },
-    "housing": {
-        "A151": "Miete",
-        "A152": "Eigentum",
-        "A153": "Kostenlos wohnen",
-    },
-    "job": {
-        "A171": "Arbeitslos/Ungelernt",
-        "A172": "Ungelernter Arbeitnehmer",
-        "A173": "Facharbeiter/Angestellter",
-        "A174": "Management/Selbstständig/Akademiker",
-    },
-    "telephone": {
-        "A191": "Nein",
-        "A192": "Ja",
-    },
-    "foreign_worker": {
-        "A201": "Ja",
-        "A202": "Nein",
-    },
+    "loan_grade": {
+        "A": "A (Beste)",
+        "B": "B (Gut)",
+        "C": "C (Mittel)",
+        "D": "D (Schlecht)",
+        "E": "E (Sehr schlecht)",
+        "F": "F (Schlechteste)"
+    }
 }
 
 DEFAULTS = {
-    "duration_months": 24,
-    "credit_amount": 2000,
-    "installment_rate_percent": 2,
-    "num_existing_credits": 1,
-    "age_years": 35,
-    "residence_since": 2,
-    "num_dependents": 1,
-    "telephone": "A192",
-    "foreign_worker": "A202",
+    "person_age": 30,
+    "person_income": 50000,
+    "person_home_ownership": "RENT",
+    "person_emp_length": 5.0,
+    "cb_person_cred_hist_length": 3,
+    "cb_person_default_on_file": "N",
+    "loan_intent": "PERSONAL",
+    "loan_grade": "B",
+    "loan_amnt": 20000,
+    "loan_int_rate": 12.0,
+    "loan_percent_income": 0.3
 }
 
 def to_readable(d: dict) -> dict:

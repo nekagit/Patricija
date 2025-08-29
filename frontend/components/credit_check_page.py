@@ -120,174 +120,82 @@ def credit_check_page():
         col1, col2 = st.columns(2)
         
         with col1:
-            age_years = st.number_input(
+            person_age = st.number_input(
                 "Alter (Jahre)",
-                min_value=VALIDATION_RULES["age_years"]["min"],
-                max_value=VALIDATION_RULES["age_years"]["max"],
+                min_value=18,
+                max_value=100,
                 value=30,
                 help="Ihr Alter in Jahren"
             )
             
-            personal_status_sex = st.selectbox(
-                "Persönlicher Status",
-                options=list(OPTIONS["personal_status_sex"].keys()),
-                format_func=lambda x: OPTIONS["personal_status_sex"][x],
-                help="Ihr persönlicher Status",
-                key="personal_status_sex_select"
+            person_income = st.number_input(
+                "Jahreseinkommen (€)",
+                min_value=0,
+                max_value=1000000,
+                value=50000,
+                step=1000,
+                help="Ihr jährliches Einkommen in Euro"
             )
             
-            num_dependents = st.number_input(
-                "Anzahl Abhängige",
-                min_value=VALIDATION_RULES["num_dependents"]["min"],
-                max_value=VALIDATION_RULES["num_dependents"]["max"],
-                value=1,
-                help="Anzahl der Personen, die von Ihnen abhängig sind"
+            person_home_ownership = st.selectbox(
+                "Wohnsituation",
+                options=["RENT", "OWN", "MORTGAGE", "OTHER"],
+                format_func=lambda x: {
+                    "RENT": "Miete",
+                    "OWN": "Eigentum",
+                    "MORTGAGE": "Hypothek",
+                    "OTHER": "Sonstiges"
+                }[x],
+                help="Ihre aktuelle Wohnsituation"
             )
             
-            residence_since = st.number_input(
-                "Wohnsitz seit (Jahre)",
-                min_value=VALIDATION_RULES["residence_since"]["min"],
-                max_value=VALIDATION_RULES["residence_since"]["max"],
-                value=2,
-                help="Seit wie vielen Jahren wohnen Sie am aktuellen Ort"
+            person_emp_length = st.number_input(
+                "Beschäftigungsdauer (Jahre)",
+                min_value=0.0,
+                max_value=50.0,
+                value=5.0,
+                step=0.5,
+                help="Seit wie vielen Jahren sind Sie beschäftigt"
             )
         
         with col2:
-            job = st.selectbox(
-                "Beruf",
-                options=list(OPTIONS["job"].keys()),
-                format_func=lambda x: OPTIONS["job"][x],
-                help="Ihr aktueller Beruf",
-                key="job_select"
+            cb_person_cred_hist_length = st.number_input(
+                "Kredithistorie Länge (Jahre)",
+                min_value=0,
+                max_value=50,
+                value=3,
+                help="Länge Ihrer Kredithistorie in Jahren"
             )
             
-            housing = st.selectbox(
-                "Wohnsituation",
-                options=list(OPTIONS["housing"].keys()),
-                format_func=lambda x: OPTIONS["housing"][x],
-                help="Ihre aktuelle Wohnsituation",
-                key="housing_select"
+            cb_person_default_on_file = st.selectbox(
+                "Standard in Datei",
+                options=["Y", "N"],
+                format_func=lambda x: "Ja" if x == "Y" else "Nein",
+                help="Haben Sie bereits einen Zahlungsausfall in Ihrer Kredithistorie"
             )
             
-            telephone = st.selectbox(
-                "Telefon",
-                options=list(OPTIONS["telephone"].keys()),
-                format_func=lambda x: OPTIONS["telephone"][x],
-                help="Haben Sie ein Telefon",
-                key="telephone_select"
+            loan_intent = st.selectbox(
+                "Kreditzweck",
+                options=["PERSONAL", "EDUCATION", "MEDICAL", "VENTURE", "HOMEIMPROVEMENT", "DEBTCONSOLIDATION"],
+                format_func=lambda x: {
+                    "PERSONAL": "Persönlich",
+                    "EDUCATION": "Ausbildung",
+                    "MEDICAL": "Medizinisch",
+                    "VENTURE": "Unternehmen",
+                    "HOMEIMPROVEMENT": "Hausverbesserung",
+                    "DEBTCONSOLIDATION": "Schuldenkonsolidierung"
+                }[x],
+                help="Zweck des Kredits"
             )
             
-            foreign_worker = st.selectbox(
-                "Ausländischer Arbeitnehmer",
-                options=list(OPTIONS["foreign_worker"].keys()),
-                format_func=lambda x: OPTIONS["foreign_worker"][x],
-                help="Sind Sie ein ausländischer Arbeitnehmer",
-                key="foreign_worker_select"
+            loan_grade = st.selectbox(
+                "Kreditnote",
+                options=["A", "B", "C", "D", "E", "F"],
+                help="Kreditnote (A = Beste, F = Schlechteste)"
             )
         
         st.markdown("""
             <div class="form-section animate-fade-in-up delay-200">
-                <div class="form-section-header">
-                    <div class="form-section-icon">🏦</div>
-                    <div class="form-section-title">Bank- und Kreditinformationen</div>
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            checking_account_status = st.selectbox(
-                "Girokonto Status",
-                options=list(OPTIONS["checking_account_status"].keys()),
-                format_func=lambda x: OPTIONS["checking_account_status"][x],
-                help="Status Ihres Girokontos",
-                key="checking_account_status_select"
-            )
-            
-            savings_account = st.selectbox(
-                "Sparkonto",
-                options=list(OPTIONS["savings_account"].keys()),
-                format_func=lambda x: OPTIONS["savings_account"][x],
-                help="Status Ihres Sparkontos",
-                key="savings_account_select"
-            )
-            
-            credit_history = st.selectbox(
-                "Kredithistorie",
-                options=list(OPTIONS["credit_history"].keys()),
-                format_func=lambda x: OPTIONS["credit_history"][x],
-                help="Ihre Kredithistorie",
-                key="credit_history_select"
-            )
-            
-            num_existing_credits = st.number_input(
-                "Bestehende Kredite",
-                min_value=VALIDATION_RULES["num_existing_credits"]["min"],
-                max_value=VALIDATION_RULES["num_existing_credits"]["max"],
-                value=1,
-                help="Anzahl Ihrer bestehenden Kredite"
-            )
-        
-        with col2:
-            purpose = st.selectbox(
-                "Kreditzweck",
-                options=list(OPTIONS["purpose"].keys()),
-                format_func=lambda x: OPTIONS["purpose"][x],
-                help="Zweck des Kredits",
-                key="purpose_select"
-            )
-            
-            property = st.selectbox(
-                "Eigentum",
-                options=list(OPTIONS["property"].keys()),
-                format_func=lambda x: OPTIONS["property"][x],
-                help="Art Ihres Eigentums",
-                key="property_select"
-            )
-            
-            other_installment_plans = st.selectbox(
-                "Andere Ratenpläne",
-                options=list(OPTIONS["other_installment_plans"].keys()),
-                format_func=lambda x: OPTIONS["other_installment_plans"][x],
-                help="Andere Ratenpläne",
-                key="other_installment_plans_select"
-            )
-            
-            other_debtors_guarantors = st.selectbox(
-                "Andere Schuldner/Bürgen",
-                options=list(OPTIONS["other_debtors_guarantors"].keys()),
-                format_func=lambda x: OPTIONS["other_debtors_guarantors"][x],
-                help="Andere Schuldner oder Bürgen",
-                key="other_debtors_guarantors_select"
-            )
-        
-        st.markdown("""
-            <div class="form-section animate-fade-in-up delay-300">
-                <div class="form-section-header">
-                    <div class="form-section-icon">💼</div>
-                    <div class="form-section-title">Beschäftigungsinformationen</div>
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            employment_since = st.selectbox(
-                "Beschäftigung seit",
-                options=list(OPTIONS["employment_since"].keys()),
-                format_func=lambda x: OPTIONS["employment_since"][x],
-                help="Seit wann sind Sie beschäftigt",
-                key="employment_since_select"
-            )
-        
-        with col2:
-            # Empty column for layout
-            pass
-        
-        st.markdown("""
-            <div class="form-section animate-fade-in-up delay-400">
                 <div class="form-section-header">
                     <div class="form-section-icon">💰</div>
                     <div class="form-section-title">Kreditdetails</div>
@@ -298,66 +206,61 @@ def credit_check_page():
         col1, col2 = st.columns(2)
         
         with col1:
-            duration_months = st.number_input(
-                "Kreditdauer (Monate)",
-                min_value=VALIDATION_RULES["duration_months"]["min"],
-                max_value=VALIDATION_RULES["duration_months"]["max"],
-                value=12,
-                help="Dauer des Kredits in Monaten"
+            loan_amnt = st.number_input(
+                "Kreditbetrag (€)",
+                min_value=100,
+                max_value=1000000,
+                value=20000,
+                step=1000,
+                help="Gewünschter Kreditbetrag in Euro"
             )
             
-            credit_amount = st.number_input(
-                "Kreditbetrag (€)",
-                min_value=VALIDATION_RULES["credit_amount"]["min"],
-                max_value=VALIDATION_RULES["credit_amount"]["max"],
-                value=2000,
-                step=100,
-                help="Gewünschter Kreditbetrag in Euro"
+            loan_int_rate = st.number_input(
+                "Kreditzinssatz (%)",
+                min_value=0.0,
+                max_value=100.0,
+                value=12.0,
+                step=0.1,
+                help="Jährlicher Zinssatz in Prozent"
             )
         
         with col2:
-            installment_rate_percent = st.number_input(
-                "Ratenanteil (%)",
-                min_value=VALIDATION_RULES["installment_rate_percent"]["min"],
-                max_value=VALIDATION_RULES["installment_rate_percent"]["max"],
-                value=3,
-                help="Anteil der Rate am verfügbaren Einkommen in Prozent"
+            loan_percent_income = st.number_input(
+                "Kreditanteil am Einkommen",
+                min_value=0.0,
+                max_value=1.0,
+                value=0.3,
+                step=0.01,
+                help="Anteil des Kredits am jährlichen Einkommen (0.0 - 1.0)"
             )
-        
-
         
         if submitted:
             # Validate form data
-            if age_years < 18:
+            if person_age < 18:
                 st.error("Sie müssen mindestens 18 Jahre alt sein.")
                 return
             
-            if credit_amount <= 0:
+            if loan_amnt <= 0:
                 st.error("Der Kreditbetrag muss größer als 0 sein.")
                 return
             
-            # Prepare application data
+            if loan_percent_income <= 0 or loan_percent_income > 1:
+                st.error("Der Kreditanteil am Einkommen muss zwischen 0 und 1 liegen.")
+                return
+            
+            # Prepare application data with new field names
             application_data = {
-                "checking_account_status": checking_account_status,
-                "duration_months": duration_months,
-                "credit_history": credit_history,
-                "purpose": purpose,
-                "credit_amount": credit_amount,
-                "savings_account": savings_account,
-                "employment_since": employment_since,
-                "installment_rate_percent": installment_rate_percent,
-                "personal_status_sex": personal_status_sex,
-                "other_debtors_guarantors": other_debtors_guarantors,
-                "residence_since": residence_since,
-                "property": property,
-                "age_years": age_years,
-                "other_installment_plans": other_installment_plans,
-                "housing": housing,
-                "num_existing_credits": num_existing_credits,
-                "job": job,
-                "num_dependents": num_dependents,
-                "telephone": telephone,
-                "foreign_worker": foreign_worker
+                "person_age": person_age,
+                "person_income": person_income,
+                "person_home_ownership": person_home_ownership,
+                "person_emp_length": person_emp_length,
+                "cb_person_cred_hist_length": cb_person_cred_hist_length,
+                "cb_person_default_on_file": cb_person_default_on_file,
+                "loan_intent": loan_intent,
+                "loan_grade": loan_grade,
+                "loan_amnt": loan_amnt,
+                "loan_int_rate": loan_int_rate,
+                "loan_percent_income": loan_percent_income
             }
             
             # Store in session state
@@ -379,8 +282,31 @@ def credit_check_page():
                         st.session_state.application_data = application_data
                         
                         # Convert application data to readable format
-                        from utils.credit_config import to_readable
-                        st.session_state.applicant_data_readable = to_readable(application_data)
+                        st.session_state.applicant_data_readable = {
+                            "Alter": f"{person_age} Jahre",
+                            "Jahreseinkommen": f"{person_income:,.0f} €",
+                            "Wohnsituation": {
+                                "RENT": "Miete",
+                                "OWN": "Eigentum",
+                                "MORTGAGE": "Hypothek",
+                                "OTHER": "Sonstiges"
+                            }[person_home_ownership],
+                            "Beschäftigungsdauer": f"{person_emp_length} Jahre",
+                            "Kredithistorie Länge": f"{cb_person_cred_hist_length} Jahre",
+                            "Standard in Datei": "Ja" if cb_person_default_on_file == "Y" else "Nein",
+                            "Kreditzweck": {
+                                "PERSONAL": "Persönlich",
+                                "EDUCATION": "Ausbildung",
+                                "MEDICAL": "Medizinisch",
+                                "VENTURE": "Unternehmen",
+                                "HOMEIMPROVEMENT": "Hausverbesserung",
+                                "DEBTCONSOLIDATION": "Schuldenkonsolidierung"
+                            }[loan_intent],
+                            "Kreditnote": loan_grade,
+                            "Kreditbetrag": f"{loan_amnt:,.0f} €",
+                            "Kreditzinssatz": f"{loan_int_rate}%",
+                            "Kreditanteil am Einkommen": f"{loan_percent_income:.1%}"
+                        }
                         
                         # Save to backend if connected
                         if backend_connected:

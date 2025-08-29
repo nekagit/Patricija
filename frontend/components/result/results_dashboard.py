@@ -27,11 +27,11 @@ def generate_deployment_code(best_model_name, is_german_credit, german_credit_fe
     feature_eng_block = ""
     if is_german_credit and german_credit_features:
         feature_eng_block = '''
-    # German Credit specific feature engineering
-    if "credit_amount" in df.columns and "age_years" in df.columns:
-        df["debt_to_age_ratio"] = df["credit_amount"] / (df["age_years"] + 1)
-    if "employment_since" in df.columns and "age_years" in df.columns:
-        df["employment_stability"] = df["employment_since"] * df["age_years"] / 100
+    # Credit Risk specific feature engineering
+    if "loan_amnt" in df.columns and "person_age" in df.columns:
+        df["debt_to_age_ratio"] = df["loan_amnt"] / (df["person_age"] + 1)
+    if "person_emp_length" in df.columns and "person_age" in df.columns:
+        df["employment_stability"] = df["person_emp_length"] * df["person_age"] / 100
 '''
     # Conditionally create the final return block
     return_block = ""

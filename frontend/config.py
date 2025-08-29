@@ -17,55 +17,37 @@ DEFAULT_MODEL = "random_forest"
 MODEL_CACHE_SIZE = 5
 
 CREDIT_FEATURES = [
-    "checking_account_status",
-    "duration_months",
-    "credit_history",
-    "purpose",
-    "credit_amount",
-    "savings_account",
-    "employment_since",
-    "installment_rate_percent",
-    "personal_status_sex",
-    "other_debtors_guarantors",
-    "residence_since",
-    "property",
-    "age_years",
-    "other_installment_plans",
-    "housing",
-    "num_existing_credits",
-    "job",
-    "num_dependents",
-    "telephone",
-    "foreign_worker"
+    "person_age",
+    "person_income",
+    "person_home_ownership",
+    "person_emp_length",
+    "cb_person_cred_hist_length",
+    "cb_person_default_on_file",
+    "loan_intent",
+    "loan_grade",
+    "loan_amnt",
+    "loan_int_rate",
+    "loan_percent_income"
 ]
 
 TARGET_VARIABLE = "loan_status"
 CREDIT_RISK_TARGET = "loan_status"
 
 CATEGORICAL_FEATURES = [
-    "checking_account_status",
-    "credit_history",
-    "purpose",
-    "savings_account",
-    "employment_since",
-    "personal_status_sex",
-    "other_debtors_guarantors",
-    "property",
-    "other_installment_plans",
-    "housing",
-    "job",
-    "telephone",
-    "foreign_worker"
+    "person_home_ownership",
+    "cb_person_default_on_file",
+    "loan_intent",
+    "loan_grade"
 ]
 
 NUMERICAL_FEATURES = [
-    "duration_months",
-    "credit_amount",
-    "installment_rate_percent",
-    "residence_since",
-    "age_years",
-    "num_existing_credits",
-    "num_dependents"
+    "person_age",
+    "person_income",
+    "person_emp_length",
+    "cb_person_cred_hist_length",
+    "loan_amnt",
+    "loan_int_rate",
+    "loan_percent_income"
 ]
 
 RISK_CATEGORIES = {
@@ -75,29 +57,20 @@ RISK_CATEGORIES = {
 }
 
 VALIDATION_RULES = {
-    "duration_months": {"min": 6, "max": 48},
-    "credit_amount": {"min": 697, "max": 9055},
-    "installment_rate_percent": {"min": 2, "max": 4},
-    "residence_since": {"min": 2, "max": 4},
-    "age_years": {"min": 22, "max": 67},
-    "num_existing_credits": {"min": 1, "max": 2},
-    "num_dependents": {"min": 1, "max": 2}
+    "person_age": {"min": 18, "max": 100},
+    "person_income": {"min": 0, "max": 1000000},
+    "person_emp_length": {"min": 0.0, "max": 50.0},
+    "cb_person_cred_hist_length": {"min": 0, "max": 50},
+    "loan_amnt": {"min": 100, "max": 1000000},
+    "loan_int_rate": {"min": 0.0, "max": 100.0},
+    "loan_percent_income": {"min": 0.0, "max": 1.0}
 }
 
 CATEGORICAL_VALUES = {
-    "checking_account_status": ["A11", "A12", "A14"],
-    "credit_history": ["A30", "A32", "A33", "A34"],
-    "purpose": ["A40"],
-    "savings_account": ["A61", "A65"],
-    "employment_since": ["A71", "A73", "A74"],
-    "personal_status_sex": ["A93"],
-    "other_debtors_guarantors": ["A101", "A103"],
-    "property": ["A121", "A122", "A124"],
-    "other_installment_plans": ["A143"],
-    "housing": ["A152"],
-    "job": ["A172", "A173"],
-    "telephone": ["A191", "A192"],
-    "foreign_worker": ["A201"]
+    "person_home_ownership": ["RENT", "OWN", "MORTGAGE", "OTHER"],
+    "cb_person_default_on_file": ["Y", "N"],
+    "loan_intent": ["PERSONAL", "EDUCATION", "MEDICAL", "VENTURE", "HOMEIMPROVEMENT", "DEBTCONSOLIDATION"],
+    "loan_grade": ["A", "B", "C", "D", "E", "F"]
 }
 
 XAI_METHODS = ["shap", "lime"]

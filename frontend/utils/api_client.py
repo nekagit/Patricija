@@ -79,6 +79,10 @@ class APIClient:
         """Create a new credit application."""
         return self._make_request("POST", "/applications/", data=application_data)
     
+    def save_application(self, application_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Save a credit application (alias for create_application)."""
+        return self.create_application(application_data)
+    
     def get_applications(self, skip: int = 0, limit: int = 100, status: Optional[str] = None) -> Dict[str, Any]:
         """Get credit applications."""
         params = {"skip": skip, "limit": limit}

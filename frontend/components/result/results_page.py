@@ -3,8 +3,6 @@ import pandas as pd
 
 from .result_details_whatif import render_details_whatif_tab
 from .result_shap import render_shap_tab
-from .result_lime import render_lime_tab
-from .result_history_model import render_history_model_tab
 
 def results_page():
     if 'prediction_result' not in st.session_state or 'applicant_data_readable' not in st.session_state:
@@ -43,12 +41,3 @@ def results_page():
     st.subheader("🎯 Erklärung (SHAP)")
     render_shap_tab(result)
     
-    st.markdown("---")
-    
-    st.subheader("🔬 Alternative Erklärung (LIME)")
-    render_lime_tab(result)
-    
-    st.markdown("---")
-    
-    st.subheader("📜 Verlauf & Modelldetails")
-    render_history_model_tab(result)
