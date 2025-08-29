@@ -43,6 +43,7 @@ scikit-image==0.25.2
 scikit-learn==1.7.1
 scipy==1.16.1
 shap==0.48.0
+xgboost==2.0.3
 six==1.17.0
 slicer==0.0.8
 smmap==5.0.2

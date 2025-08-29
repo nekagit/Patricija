@@ -200,11 +200,12 @@ def training_page():
             elif model_type == "Gradient Boosting":
                 n_estimators = st.slider("Anzahl Bäume", 50, 500, 100)
                 learning_rate = st.slider("Lernrate", 0.01, 0.3, 0.1, 0.01)
+            elif model_type == "XGBoost":
+                n_estimators = st.slider("Anzahl Bäume", 50, 500, 100)
+                learning_rate = st.slider("Lernrate", 0.01, 0.3, 0.1, 0.01)
+                max_depth = st.slider("Maximale Tiefe", 3, 10, 6)
             elif model_type == "Logistic Regression":
                 C = st.slider("Regularisierung (C)", 0.1, 10.0, 1.0, 0.1)
-            else:  # XGBoost
-                n_estimators = st.slider("Anzahl Bäume", 50, 500, 100)
-                max_depth = st.slider("Maximale Tiefe", 3, 10, 6)
         
         with col2:
             if model_type in ["Random Forest", "Gradient Boosting", "XGBoost"]:
@@ -314,7 +315,7 @@ def simulate_training(df, model_type, test_size, random_state, cv_folds, target_
         "Random Forest": 0.85,
         "Gradient Boosting": 0.87,
         "Logistic Regression": 0.82,
-        "XGBoost": 0.86
+        "XGBoost": 0.89
     }
     
     accuracy = model_accuracy.get(model_type, base_accuracy)
@@ -429,8 +430,8 @@ def display_training_results(results):
 def simulate_model_comparison():
     """Simulate comparison of different models."""
     
-    models = ["Random Forest", "Gradient Boosting", "Logistic Regression", "XGBoost"]
-    accuracies = [0.85, 0.87, 0.82, 0.86]
+    models = ["Random Forest", "Gradient Boosting", "XGBoost", "Logistic Regression"]
+    accuracies = [0.85, 0.87, 0.89, 0.82]
     
     return pd.DataFrame({
         'Model': models,

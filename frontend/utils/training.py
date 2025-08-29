@@ -14,6 +14,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler, LabelEncoder
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
+import xgboost as xgb
 from sklearn.metrics import accuracy_score, roc_auc_score, precision_recall_curve, auc
 
 RANDOM_STATE = 42
@@ -201,6 +202,15 @@ def train_and_select(
                 learning_rate=0.1,
                 max_depth=5,
                 random_state=RANDOM_STATE
+            )
+        elif config.estimator == "XGBoost":
+            model = xgb.XGBClassifier(
+                n_estimators=100,
+                learning_rate=0.1,
+                max_depth=6,
+                random_state=RANDOM_STATE,
+                eval_metric='logloss',
+                use_label_encoder=False
             )
         else:
             raise ValueError(f"Unknown estimator: {config.estimator}")
