@@ -1,8 +1,0 @@
-{
-  "plot_type": "matplotlib",
-  "feature_count": 11,
-  "max_abs_value": 0.2518032087271092,
-  "normalized": true,
-  "filename": "shap_radar_20250829_114128.png",
-  "saved_at": "2025-08-29T11:41:29.187654"
-}

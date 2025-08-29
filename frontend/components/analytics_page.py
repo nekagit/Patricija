@@ -328,7 +328,7 @@ def details_tab(df, target_var):
     # Data quality metrics
     st.markdown("#### 🎯 Datenqualität")
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
     
     with col1:
         completeness = (1 - df.isnull().sum().sum() / (len(df) * len(df.columns))) * 100
@@ -338,10 +338,6 @@ def details_tab(df, target_var):
         if target_var in df.columns:
             balance = min(df[target_var].value_counts()) / max(df[target_var].value_counts()) * 100
             st.metric("Klassenbalance", f"{balance:.1f}%")
-    
-    with col3:
-        duplicates = df.duplicated().sum()
-        st.metric("Duplikate", f"{duplicates:,}")
 
 def clean_dataset(df):
     """Clean the dataset for analysis."""

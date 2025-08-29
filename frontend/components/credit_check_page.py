@@ -38,7 +38,75 @@ def credit_check_page():
             </div>
         """, unsafe_allow_html=True)
     
+    # Initialize model selection in session state
+    if 'selected_model' not in st.session_state:
+        st.session_state.selected_model = "Gradient Boosting"
+    
+    # Model selection outside the form
+    st.markdown("""
+        <div class="form-section animate-fade-in-up delay-50">
+            <div class="form-section-header">
+                <div class="form-section-icon">🤖</div>
+                <div class="form-section-title">Modell-Auswahl</div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 1, 1])
+    
+    with col1:
+        if st.button("🔄 Gradient Boosting", use_container_width=True, 
+                    type="primary" if st.session_state.selected_model == "Gradient Boosting" else "secondary"):
+            st.session_state.selected_model = "Gradient Boosting"
+            st.rerun()
+    
+    with col2:
+        if st.button("🌲 Random Forest", use_container_width=True,
+                    type="primary" if st.session_state.selected_model == "Random Forest" else "secondary"):
+            st.session_state.selected_model = "Random Forest"
+            st.rerun()
+    
+    with col3:
+        st.markdown(f"""
+            <div style="text-align: center; padding: 15px; background-color: rgba(255,255,255,0.1); border-radius: 5px; margin-top: 5px;">
+                <small>📊 Aktuelles Modell:<br><strong>{st.session_state.selected_model}</strong></small>
+            </div>
+        """, unsafe_allow_html=True)
+    
+    # Active model info display
+    model_info = {
+        "Gradient Boosting": "Optimiert für komplexe Muster in Kreditdaten. Verwendet sequentielle Entscheidungsbäume mit Gradientenverstärkung.",
+        "Random Forest": "Ensemble-Methode mit hoher Robustheit. Kombiniert mehrere Entscheidungsbäume für zuverlässige Vorhersagen."
+    }
+    
+    st.info(f"""
+    **🤖 Aktives Modell: {st.session_state.selected_model}**
+    
+    {model_info.get(st.session_state.selected_model, "Machine Learning Modell für Kreditrisiko-Bewertung.")}
+    
+    Klicken Sie auf die Buttons oben, um das Modell zu wechseln.
+    """)
+    
     with st.form("credit_application_form"):
+        
+        # Submit button at the top
+        st.markdown("""
+            <div class="form-section animate-fade-in-up delay-75">
+                <div class="form-section-header">
+                    <div class="form-section-icon">📋</div>
+                    <div class="form-section-title">Antrag einreichen</div>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        col1, col2, col3 = st.columns([1, 1, 1])
+        
+        with col2:
+            submitted = st.form_submit_button(
+                "🚀 Antrag einreichen & Analyse starten",
+                use_container_width=True,
+                type="primary"
+            )
         
         st.markdown("""
             <div class="form-section animate-fade-in-up delay-100">
@@ -219,24 +287,6 @@ def credit_check_page():
             pass
         
         st.markdown("""
-            <div class="form-section animate-fade-in-up delay-350">
-                <div class="form-section-header">
-                    <div class="form-section-icon">🤖</div>
-                    <div class="form-section-title">Modell-Auswahl</div>
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        # Model selection dropdown
-        selected_model = st.selectbox(
-            "Machine Learning Modell",
-            ["Gradient Boosting", "Random Forest"],
-            index=0,
-            help="Wählen Sie das Modell für die Kreditrisiko-Bewertung",
-            key="model_selection"
-        )
-        
-        st.markdown("""
             <div class="form-section animate-fade-in-up delay-400">
                 <div class="form-section-header">
                     <div class="form-section-icon">💰</div>
@@ -274,23 +324,7 @@ def credit_check_page():
                 help="Anteil der Rate am verfügbaren Einkommen in Prozent"
             )
         
-        st.markdown("""
-            <div class="form-section animate-fade-in-up delay-500">
-                <div class="form-section-header">
-                    <div class="form-section-icon">📋</div>
-                    <div class="form-section-title">Antrag einreichen</div>
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        col1, col2, col3 = st.columns([1, 1, 1])
-        
-        with col2:
-            submitted = st.form_submit_button(
-                "Antrag einreichen & Analyse starten",
-                use_container_width=True,
-                type="primary"
-            )
+
         
         if submitted:
             # Validate form data
@@ -337,7 +371,7 @@ def credit_check_page():
             # Run prediction
             with st.spinner("Analysiere Kreditantrag..."):
                 try:
-                    prediction_result = run_predictions(application_data, selected_model)
+                    prediction_result = run_predictions(application_data, st.session_state.selected_model)
                     
                     if prediction_result:
                         # Store results in session state
