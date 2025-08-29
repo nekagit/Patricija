@@ -1,0 +1,202 @@
+/* ===== SIDEBAR STYLES ===== */
+
+/* Sidebar Container */
+[data-testid="stSidebar"] {
+  background: var(--color-surface) !important;
+  backdrop-filter: blur(var(--blur-lg)) !important;
+  -webkit-backdrop-filter: blur(var(--blur-lg)) !important;
+  border-right: 1px solid var(--color-border) !important;
+  min-width: 320px !important;
+  width: 360px !important;
+}
+
+[data-testid="stSidebar"] * {
+  color: var(--color-text-primary) !important;
+}
+
+[data-testid="stSidebar"] .block-container {
+  padding: var(--spacing-lg) !important;
+}
+
+/* Sidebar Content */
+.sidebar-content {
+  padding: var(--spacing-lg);
+  background: transparent;
+}
+
+/* Sidebar Navigation Items */
+[data-testid="stSidebar"] .stButton > button {
+  background: var(--color-surface-3) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--spacing-md) var(--spacing-lg) !important;
+  font-weight: 500 !important;
+  font-size: var(--font-size-base) !important;
+  transition: all var(--transition-normal) !important;
+  margin-bottom: var(--spacing-sm) !important;
+  text-align: left !important;
+  width: 100% !important;
+  min-height: auto !important;
+  box-shadow: none !important;
+}
+
+[data-testid="stSidebar"] .stButton > button:hover {
+  background: var(--color-surface-hover) !important;
+  border-color: var(--color-border-hover) !important;
+  transform: translateX(4px) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+[data-testid="stSidebar"] .stButton > button:focus {
+  outline: none !important;
+  border-color: var(--color-border-focus) !important;
+  box-shadow: 0 0 0 3px rgba(194, 73, 20, 0.2) !important;
+}
+
+/* Active Navigation State */
+[data-testid="stSidebar"] .stButton > button.active {
+  background: var(--color-surface-active) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  border-left: 3px solid var(--color-primary) !important;
+}
+
+/* Sidebar Headers */
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+  font-family: var(--font-family-display) !important;
+  font-weight: 600 !important;
+  color: var(--color-text-primary) !important;
+  margin-bottom: var(--spacing-md) !important;
+}
+
+[data-testid="stSidebar"] h2 {
+  font-size: var(--font-size-xl) !important;
+}
+
+[data-testid="stSidebar"] h3 {
+  font-size: var(--font-size-lg) !important;
+}
+
+/* Sidebar Dividers */
+[data-testid="stSidebar"] hr {
+  border: none !important;
+  height: 1px !important;
+  background: var(--color-border) !important;
+  margin: var(--spacing-lg) 0 !important;
+}
+
+/* Sidebar Markdown */
+[data-testid="stSidebar"] .stMarkdown {
+  color: var(--color-text-primary) !important;
+}
+
+[data-testid="stSidebar"] .stMarkdown p {
+  margin-bottom: var(--spacing-sm) !important;
+}
+
+/* Sidebar Responsive */
+@media (max-width: 768px) {
+  [data-testid="stSidebar"] {
+    min-width: 280px !important;
+    width: 320px !important;
+  }
+  
+  [data-testid="stSidebar"] .block-container {
+    padding: var(--spacing-md) !important;
+  }
+  
+  [data-testid="stSidebar"] .stButton > button {
+    padding: var(--spacing-sm) var(--spacing-md) !important;
+    font-size: var(--font-size-sm) !important;
+  }
+}
+
+/* Sidebar Animations */
+[data-testid="stSidebar"] .stButton > button {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+[data-testid="stSidebar"] .stButton:nth-child(1) > button {
+  animation-delay: 0.1s;
+}
+
+[data-testid="stSidebar"] .stButton:nth-child(2) > button {
+  animation-delay: 0.2s;
+}
+
+[data-testid="stSidebar"] .stButton:nth-child(3) > button {
+  animation-delay: 0.3s;
+}
+
+[data-testid="stSidebar"] .stButton:nth-child(4) > button {
+  animation-delay: 0.4s;
+}
+
+[data-testid="stSidebar"] .stButton:nth-child(5) > button {
+  animation-delay: 0.5s;
+}
+
+/* Sidebar Icons */
+[data-testid="stSidebar"] .stButton > button::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: var(--spacing-sm);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+}
+
+/* Sidebar Hover Effects */
+[data-testid="stSidebar"] .stButton > button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(194, 73, 20, 0.1), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  pointer-events: none;
+}
+
+[data-testid="stSidebar"] .stButton > button:hover::after {
+  opacity: 1;
+}
+
+/* Sidebar Focus States */
+[data-testid="stSidebar"] .stButton > button:focus-visible {
+  outline: 2px solid var(--color-primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* Sidebar Loading States */
+[data-testid="stSidebar"] .stButton > button:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Sidebar Scrollbar */
+[data-testid="stSidebar"] ::-webkit-scrollbar {
+  width: 6px;
+}
+
+[data-testid="stSidebar"] ::-webkit-scrollbar-track {
+  background: var(--color-surface-3);
+  border-radius: var(--radius-sm);
+}
+
+[data-testid="stSidebar"] ::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+[data-testid="stSidebar"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}

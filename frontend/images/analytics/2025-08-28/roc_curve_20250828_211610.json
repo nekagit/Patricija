@@ -1,0 +1,15 @@
+{
+  "plot_type": "matplotlib",
+  "y_true_shape": [
+    6517
+  ],
+  "roc_auc": 0.9197243926576482,
+  "fpr_shape": [
+    854
+  ],
+  "tpr_shape": [
+    854
+  ],
+  "filename": "roc_curve_20250828_211610.png",
+  "saved_at": "2025-08-28T21:16:10.826768"
+}

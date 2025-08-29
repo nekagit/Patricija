@@ -1,0 +1,12 @@
+{
+  "plot_type": "matplotlib",
+  "y_true_shape": [
+    6517
+  ],
+  "y_pred_shape": [
+    6517
+  ],
+  "threshold": 0.5,
+  "filename": "confusion_matrix_20250828_204808.png",
+  "saved_at": "2025-08-28T20:48:08.151487"
+}

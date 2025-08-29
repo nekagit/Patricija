@@ -1,0 +1,10 @@
+{
+  "plot_type": "matplotlib",
+  "feature_count": 11,
+  "top_n": 10,
+  "max_importance": 0.28450394495865516,
+  "min_importance": 0.009296654309690892,
+  "mean_importance": 0.09090909090909088,
+  "filename": "feature_importance_20250828_232958.png",
+  "saved_at": "2025-08-28T23:29:58.496099"
+}
