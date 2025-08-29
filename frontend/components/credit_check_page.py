@@ -344,3 +344,79 @@ def credit_check_page():
             </ul>
         </div>
     """, unsafe_allow_html=True)
+
+    with st.expander("🔎 Diagnose: Sanity-Tests für Vorhersagen"):
+        st.caption("Führt mehrere feste Testfälle aus, um Good/Bad-Vorhersagen zu prüfen.")
+        if st.button("Sanity-Tests ausführen", use_container_width=True):
+            try:
+                from utils.prediction import ModelLoader
+                loader = ModelLoader()
+                artifacts = loader.load_model_artifacts(st.session_state.selected_model)
+                model = artifacts["model"]
+                classes = list(map(str, getattr(model, "classes_", [])))
+                encoders = artifacts.get("encoders", {})
+                feature_names = artifacts.get("feature_names", [])
+
+                test_cases = [
+                    ("Sehr geringes Risiko (sollte Good sein)", {
+                        "person_age": 45,
+                        "person_income": 120000,
+                        "person_home_ownership": "OWN",
+                        "person_emp_length": 10.0,
+                        "cb_person_cred_hist_length": 12,
+                        "cb_person_default_on_file": "N",
+                        "loan_intent": "PERSONAL",
+                        "loan_grade": "A",
+                        "loan_amnt": 5000,
+                        "loan_int_rate": 6.0,
+                        "loan_percent_income": 0.05
+                    }),
+                    ("Hohes Risiko (sollte Bad sein)", {
+                        "person_age": 21,
+                        "person_income": 15000,
+                        "person_home_ownership": "RENT",
+                        "person_emp_length": 0.0,
+                        "cb_person_cred_hist_length": 0,
+                        "cb_person_default_on_file": "Y",
+                        "loan_intent": "VENTURE",
+                        "loan_grade": "F",
+                        "loan_amnt": 50000,
+                        "loan_int_rate": 25.0,
+                        "loan_percent_income": 0.80
+                    }),
+                    ("Mittleres Risiko", {
+                        "person_age": 30,
+                        "person_income": 40000,
+                        "person_home_ownership": "RENT",
+                        "person_emp_length": 2.0,
+                        "cb_person_cred_hist_length": 2,
+                        "cb_person_default_on_file": "N",
+                        "loan_intent": "MEDICAL",
+                        "loan_grade": "C",
+                        "loan_amnt": 20000,
+                        "loan_int_rate": 14.0,
+                        "loan_percent_income": 0.35
+                    })
+                ]
+
+                rows = []
+                for case_name, case_data in test_cases:
+                    res = run_predictions(case_data, st.session_state.selected_model)
+                    rows.append({
+                        "Testfall": case_name,
+                        "Vorhersage": res.get("prediction"),
+                        "P(Good)": round(float(res.get("probability_good", 0.0)), 4),
+                        "P(Bad)": round(float(res.get("probability_bad", 0.0)), 4),
+                        "Confidence": round(float(res.get("confidence", 0.0)), 4)
+                    })
+
+                st.write({
+                    "model_classes": classes,
+                    "encoders_loaded": bool(encoders),
+                    "num_encoders": len(encoders) if isinstance(encoders, dict) else None,
+                    "num_features": len(feature_names),
+                    "ausgewähltes_modell": st.session_state.selected_model
+                })
+                st.dataframe(pd.DataFrame(rows), use_container_width=True)
+            except Exception as e:
+                st.error(f"Sanity-Tests fehlgeschlagen: {e}")
