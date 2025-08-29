@@ -209,7 +209,10 @@ class PredictionEngine:
             "prediction": prediction_text,
             "probability_good": float(proba[good_idx]),
             "probability_bad": float(proba[bad_idx]),
-            "confidence": float(max(proba))
+            "confidence": float(max(proba)),
+            "class_names": classes,
+            "good_class_index": int(good_idx),
+            "bad_class_index": int(bad_idx)
         }
     
     def _generate_explanations(

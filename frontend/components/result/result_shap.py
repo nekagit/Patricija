@@ -144,7 +144,8 @@ def render_shap_tab(result: dict, application_id: str = None):
         return
 
     try:
-        expl = _explanation_for_class(shap_obj, 1, feature_names)
+        good_idx = int(result.get("good_class_index", 1))
+        expl = _explanation_for_class(shap_obj, good_idx, feature_names)
         values = np.asarray(expl.values).flatten()
         
         if values.size == 0:
